@@ -1,0 +1,13 @@
+{
+  "name": "auto-reserve",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "\u0016https://github.com/Avsphere/autoReserve.git"
+  },
+  "author": "avsphere",
+  "license": "ISC"
+}
