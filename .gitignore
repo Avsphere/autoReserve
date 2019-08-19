@@ -1,0 +1,20 @@
+# Dependency directories
+node_modules/
+jspm_packages/
+config/*
+environ.env
+.env
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+environ.env

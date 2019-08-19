@@ -29,7 +29,7 @@ const reserve = async () => {
         const reserveDate = `8/21/2019`
         await page.goto(`https://dnn.proclub.com/Sports/Squash/Court-Schedule/CourtScheduleStandalone?CurrentDate=${reserveDate}`) //iframe reserve component
         await login(page)
-        await page.waitForSelector('#Form'); //waits for the dom to reload after the login request
+        await page.waitForSelector('#Form', { timeout : 60000 }); //waits for the dom to reload after the login request
         
         const cellDates = await selectDateCell({
             rangeBegin : moment('8/21/2019 5:00:00 PM'),
@@ -42,6 +42,6 @@ const reserve = async () => {
     }
 }
 
-
+reserve()
 // module.exports = curry(reserve)
 
