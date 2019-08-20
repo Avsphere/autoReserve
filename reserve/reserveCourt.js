@@ -67,16 +67,18 @@ const verifyReservation = (dateBegin, dateEnd) => {
 
 }
 
-
-const reserveCourt = ({
-        dateBegin,
-        dateEnd,
-        page
-    }) => injectLibraries(page)
-    .then(_ => page.evaluate(selectCourt, dateBegin, dateEnd)) //this loads the verification page, hence the reinjection
-    .then(_ => page.waitForSelector('#selectTimeGroup span')) //wait for verification page dom to load
-    .then(_ => injectLibraries(page))
-    .then(_ => page.evaluate(verifyReservation, dateBegin, dateEnd))
+const reserveCourt = async ({ dateBegin, dateEnd, page }) => {
+    try {
+        await injectLibraries(page)
+        await page.evaluate(selectCourt, dateBegin, dateEnd)
+        await page.waitForSelector('#selectTimeGroup span')
+        await injectLibraries(page) //prosport bad view setup, poor reload inside, thus reinject
+        await page.evaluate(verifyReservation, dateBegin, dateEnd)
+    } catch (e) {
+        //LOOK AT ME : worth it for better handling? 8/19
+        console.error('reserveCourt: ', e)
+    }
+}
 
 
 module.exports = reserveCourt
