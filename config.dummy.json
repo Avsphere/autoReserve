@@ -1,0 +1,17 @@
+{
+    "username" : "",
+    "password" : "",
+    "logging": {
+        "logServer": ""
+    },
+    "reserveInfo" : [
+        {
+            "day": "friday",
+            "hour" : 18
+        },
+        {
+            "day": "saturday",
+            "hour" : 10
+        }
+    ]
+}

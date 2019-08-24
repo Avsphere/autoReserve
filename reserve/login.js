@@ -16,7 +16,11 @@ const login = ({ page, username, password }) => page
         username,
         password
     })
-    .then(_ => page.click('#dnn_LOGINFORM_Login_DNN_cmdLogin'))
+    .then( _ => page.waitForSelector('#dnn_LOGINFORM_Login_DNN_cmdLogin') )
+    .then( _ => page.click('#dnn_LOGINFORM_Login_DNN_cmdLogin') )
+    .catch( e => {
+        console.error('Login failed ', e)
+    })
 
 
 module.exports = login;

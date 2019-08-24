@@ -2,7 +2,8 @@ const login = require('./login')
 const reserveCourt = require('./reserveCourt')
 const puppeteer = require('puppeteer')
 const moment = require('moment')
-
+const { promisify } = require('util')
+const delay = promisify(setTimeout)
 
 
 const dateToProSportUrlForm = date => moment(date).format('L') //L is the Month numeral, day of month, year locale built-in
@@ -10,9 +11,14 @@ const generateCourtScheduleUrl = date => `https://dnn.proclub.com/Sports/Squash/
 
 
 const makeReservation = ({ username, password }) => async ({ dateBegin, dateEnd }) => {
+    if ( !dateEnd ) { dateEnd = moment(dateBegin).add(1, 'hour') }
+    const browser = await puppeteer.launch({headless: false});
+
     try {
-        const browser = await puppeteer.launch({headless: false});
         const page = await browser.newPage()
+
+        // console.log('making reservation beep beep boop', dateBegin.format(), dateEnd.format() )
+        // await delay(10000)
 
         const courtSchedulerUrl = generateCourtScheduleUrl(dateBegin)
         await page.goto(courtSchedulerUrl) //iframe reserve component
@@ -21,12 +27,13 @@ const makeReservation = ({ username, password }) => async ({ dateBegin, dateEnd 
         await login({ page, username, password })
         await page.waitForSelector('#Form'); //waits for the dom to reload post login (scheduler is wrapped in #Form)
 
-        const reservationText = await reserveCourt({ dateBegin, dateEnd, page })
-        return reservationText;
+        const reservationText = await reserveCourt({ dateBegin, dateEnd, page }) //no really need to return?
+        console.log('Made a reservation : ', reservationText)
 
     } catch (e) {
         console.log('makeReservation Error: ', e)
-        return false
+    } finally {
+        browser.close()
     }
 }
 
