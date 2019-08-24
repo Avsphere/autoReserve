@@ -9,23 +9,16 @@ const makeReservation = require('./reserve/makeReservation')({ username, passwor
 const RESERVATION_IN_ADVANCE_DAYS = 3 //this is the amount of days pro sport lets us reserve early
 
 
-//This is given the date we want to reserve the court on
-//waits until the date we CAN make the reservation
-//then makes the reservation
 const reservationRunner = curry( async (currentMoment, reserveDate) => {
     console.log('Making reservation for date: ', reserveDate.format())
     const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_DAYS, 'days')
     console.log('Making reservation ON : ', canMakeReservationOn.format())
     
-    
     const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) //this could be negative if the date was past on init, in which case delay is 0
-
     console.log('ms till reserve : ', msTillMakeReserveCall, 'which is ', msTillMakeReserveCall / 1000 / 60 / 60, ' hours')
 
     await delay(msTillMakeReserveCall)
     await makeReservation({ dateBegin : reserveDate })
-    
-    return true;
 })
 
 const dayHourToDate = ({day, hour}) => moment().tz('US/Pacific').startOf('week').day(day).hour(hour).minute(0)
