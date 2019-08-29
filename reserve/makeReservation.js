@@ -2,8 +2,6 @@ const login = require('./login')
 const reserveCourt = require('./reserveCourt')
 const puppeteer = require('puppeteer')
 const moment = require('moment')
-const { promisify } = require('util')
-const delay = promisify(setTimeout)
 
 
 const dateToProSportUrlForm = date => moment(date).format('L') //L is the Month numeral, day of month, year locale built-in
@@ -16,9 +14,6 @@ const makeReservation = ({ username, password }) => async ({ dateBegin, dateEnd 
 
     try {
         const page = await browser.newPage()
-
-        // console.log('making reservation beep beep boop', dateBegin.format(), dateEnd.format() )
-        // await delay(10000)
 
         const courtSchedulerUrl = generateCourtScheduleUrl(dateBegin)
         await page.goto(courtSchedulerUrl) //iframe reserve component

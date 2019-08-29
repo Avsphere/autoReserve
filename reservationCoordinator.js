@@ -6,12 +6,12 @@ const { promisify } = require('util')
 const delay = promisify(setTimeout)
 const makeReservation = require('./reserve/makeReservation')({ username, password })
 
-const RESERVATION_IN_ADVANCE_DAYS = 3 //this is the amount of days pro sport lets us reserve early
+const RESERVATION_IN_ADVANCE_HOURS = 3*24 //this is the amount of time pro sport lets us reserve early
 
 
 const reservationRunner = curry( async (currentMoment, reserveDate) => {
     console.log('Making reservation for date: ', reserveDate.format())
-    const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_DAYS, 'days')
+    const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_HOURS, 'hours')
     console.log('Making reservation ON : ', canMakeReservationOn.format())
     
     const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) //this could be negative if the date was past on init, in which case delay is 0
