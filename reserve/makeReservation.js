@@ -28,7 +28,7 @@ const makeReservation = ({ username, password }) => async ({ dateBegin, dateEnd 
     } catch (e) {
         console.log('makeReservation Error: ', e)
     } finally {
-        browser.close()
+        // browser.close()
     }
 }
 

@@ -11,11 +11,11 @@ const selectCourt = (dateBegin, dateEnd) => {
         head,
         split,
         reduce,
-        add
+        add,
+        map
     } = window.R //from injection 
     const moment = window.moment //from injection
 
-    //HELPER FUNCTIONS
 
     //matchDate :: RegExp -> String -> [String]
     const matchDate = match(/(?:\d+\/+\d+\/\d+) (\d+:\d\d:\d\d \w\w)/g)
@@ -23,6 +23,7 @@ const selectCourt = (dateBegin, dateEnd) => {
     //extractOnClick :: domElement -> String
     const extractOnClick = el => el.getAttribute('onClick') //as their code stores the cell date in the onClick
 
+    
     const last = arr => arr[arr.length - 1]
 
     const getNSiblings = direction => n => el => {
@@ -81,15 +82,16 @@ const selectCourt = (dateBegin, dateEnd) => {
 
     const isNotALessonCourt = cell => [1, 2].includes(cellElementToCourtNumber(cell)) === false
 
-    //courtIsPrime :: domElement -> Boolean
-    const courtIsPrime = cell => isWithinTime(cell) && isNotALessonCourt(cell) && isEmpty(cell)
+    //courtIsValidPick :: domElement -> Boolean
+    const courtIsValidPick = cell => isWithinTime(cell) && isNotALessonCourt(cell) && isEmpty(cell)
 
     const cells = Array.from(document.querySelectorAll('.calendar-table .col-court .cell.empty'))
-    const primeCourts = cells.filter(courtIsPrime)
-    const orderedCourts = primeCourts.sort(compareCourtNumber).sort(compareSurroundingOpenCourts) // chain sort based on method priority ie having surrounding open courts is better
-
-    console.log('ordered courts', orderedCourts)
-    // orderedCourts[0].click()
+    const validCourts = cells.filter(courtIsValidPick)
+    const orderedCourts = validCourts.sort(compareCourtNumber).sort(compareSurroundingOpenCourts) // chain sort based on method priority ie having surrounding open courts is better
+    
+    if (validCourts.length === 0) throw new Error(`No valid courts on at time: ${moment(dateBegin).format()}`)
+    
+    orderedCourts[0].click()
 }
 
-module.exports = selectCourt
+module.exports = selectCourt 

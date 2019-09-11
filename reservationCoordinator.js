@@ -36,8 +36,8 @@ const getReserveDates = curry( (currentMoment, rawReserveConfig) => rawReserveCo
     })
 )
 
-//application head
-const run = initialReserveDates => async function reservationLoop(weeksToAdd=0) {
+//main loop
+const loopReserve = initialReserveDates => async function reservationLoop(weeksToAdd=0) {
     const reserveDatesWithOffset = initialReserveDates.map(addWeeks(weeksToAdd))
 
     const currentMoment = moment().tz('US/Pacific') //while this breaks purity it is the app head and feels safer since is used to compute the timeout
@@ -47,8 +47,14 @@ const run = initialReserveDates => async function reservationLoop(weeksToAdd=0) 
     reservationLoop(weeksToAdd+1)
 }
 
+const run = () => {
+    const currentMoment = moment().tz('US/Pacific')
+    const reserveDates = getReserveDates(currentMoment)(reserveInfo)
 
-const currentMoment = moment().tz('US/Pacific')
-const reserveDates = getReserveDates(currentMoment)(reserveInfo)
+    loopReserve(reserveDates)()
+}
 
-run(reserveDates)()
+
+run()
+
+// module.exports = run;
