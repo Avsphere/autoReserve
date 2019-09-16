@@ -1,10 +1,9 @@
 #!/bin/bash
-echo "Beginning setup"
+echo "Starting setup"
 
 sudo apt-get update -y
 sudo apt-get upgrade -y
 
-sudo apt-get install git -y
 
 curl - o - https: //raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
 
@@ -13,15 +12,15 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 
 nvm install --lts
 
-git clone https://github.com/Avsphere/autoReserve.git
-
-cd ~/autoReserve
-
 npm install
 
 npm install -g pm2
 
 pm2 start -n autoReserve reservationCoordinator.js
+
+pm2 list
+
+echo "All done"
 
 
 
