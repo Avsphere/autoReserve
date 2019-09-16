@@ -11,10 +11,11 @@ const RESERVATION_IN_ADVANCE_HOURS = 3*24 //this is the amount of time pro sport
 
 const reservationRunner = curry( async (currentMoment, reserveDate) => {
     console.log('Making reservation for date: ', reserveDate.format())
-    const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_HOURS, 'hours')
+    const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_HOURS, 'hours') 
     console.log('Making reservation ON : ', canMakeReservationOn.format())
-    
-    const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) //this could be negative if the date was past on init, in which case delay is 0
+
+    const inconspicuousDelay = Math.floor( Math.random()*1000000 ) //So that we are not reserving at the same time -- max wait is ~3 hours
+    const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) + inconspicuousDelay //this could be negative if the date was past on init, in which case delay is 0
     console.log('ms till reserve : ', msTillMakeReserveCall, 'which is ', msTillMakeReserveCall / 1000 / 60 / 60, ' hours')
 
     await delay(msTillMakeReserveCall)
