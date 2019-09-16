@@ -7,7 +7,12 @@ Reservation coordinator is service head
 
 This has not really been tested so expect bugs
 
-Make sure you linux vm has git can make outside requests, curl something to check
+Make sure you have git and can make outside requests, curl something to check
+
+You may need to
+```
+sudo apt-get install git curl -y
+```
 
 ```
 curl https://google.com
@@ -31,16 +36,22 @@ cd into autoReserve
 cd ~/autoReserve
 ```
 
+** Create a config.json from config.dummy.json and fill in the fields. For example**
+```
+cp config.dummy.json config.json
+vim config.json
+```
+
 Make sure you can execute the setup script
 
 ```
 chmod +x ./bin/setup.sh
 ```
 
-Execute with sudo
+Execute with sudo but as your user
 
 ```
-sudo ./bin/setup.sh
+sudo -u $USER ./bin/setup.sh
 ```
 
 
