@@ -1,5 +1,4 @@
-# Project Title
-AutoReserve
+# AutoReserve
 
 ## Setup
 
