@@ -53,4 +53,10 @@ Execute with sudo but as your user
 sudo -u $USER ./bin/setup.sh
 ```
 
+Then you can monitor with pm2
+
+```
+pm2 list
+pm2 logs
+```
 
