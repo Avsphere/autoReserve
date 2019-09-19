@@ -15,10 +15,14 @@ const reservationRunner = curry( async (currentMoment, reserveDate) => {
     console.log('Making reservation ON : ', canMakeReservationOn.format())
 
     const inconspicuousDelay = Math.floor( Math.random()*1000000 ) //So that we are not reserving at the same time -- max wait is ~3 hours
-    const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) + inconspicuousDelay //this could be negative if the date was past on init, in which case delay is 0
+    const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) > 0 
+		? canMakeReservationOn.diff(currentMoment) + inconspicuousDelay
+		: inconspicuousDelay //always make sure there is some delay
+
     console.log('ms till reserve : ', msTillMakeReserveCall, 'which is ', msTillMakeReserveCall / 1000 / 60 / 60, ' hours')
 
     await delay(msTillMakeReserveCall)
+    console.log("attempting to make reservation");
     await makeReservation({ dateBegin : reserveDate })
 })
 

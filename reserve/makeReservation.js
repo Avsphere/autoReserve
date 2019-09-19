@@ -13,7 +13,8 @@ const makeReservation = ({ username, password, dev }) => async ({ dateBegin, dat
     if ( !dateEnd ) { dateEnd = moment(dateBegin).add(1, 'hour') }
     const browser = await puppeteer.launch({headless: true})
     try {
-        const page = await browser.newPage()
+	console.log("Starting reservation process");
+	const page = await browser.newPage()
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');
 
         const courtSchedulerUrl = generateCourtScheduleUrl(dateBegin)
@@ -32,7 +33,7 @@ const makeReservation = ({ username, password, dev }) => async ({ dateBegin, dat
     } catch (e) {
         console.log('makeReservation Error: ', e)
     } finally {
-        browser.close()
+        //browser.close()
     }
 }
 
