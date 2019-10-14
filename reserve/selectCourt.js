@@ -158,7 +158,6 @@ const selectCourt = (dateBegin, dateEnd, selectionIndex) => {
     if (validCourts.length === 0) throw new Error(`No valid courts on at time: ${moment(dateBegin).format()}`)
     if ( selectionIndex > validCourts.length ) throw new Error(`Selection index is ${selectionIndex} and there are only ${validCourts.length} valid courts`);
 
-
     orderedCourts[selectionIndex].click()
 }
 

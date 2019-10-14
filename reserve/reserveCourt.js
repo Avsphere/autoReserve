@@ -25,11 +25,18 @@ const reserveCourt = async ({ dateBegin, dateEnd, page }) => {
             await page.evaluate(selectCourt, dateBegin, dateEnd, selectionIndex) //navigates to the verify page
             
             await page.waitForSelector('#selectTimeGroup span')
+            console.log("On verify page")
             await injectLibraries(page) //pro sport reloads scripts inside page after selection, thus need to reinject scripts
-            await page.waitForSelector('#dnn_ctr2372_View_SelectTimeView_btnCreateBooking') //make sure that the verify view dom is ready
+            console.log("injected")
+            await safeDelay(2000);
+
+            // await page.waitForSelector('#dnn_ctr2372_View_SelectTimeView_btnCreateBooking') //make sure that the verify view dom is ready
+            console.log("wait for selector")
+
             const possibleReservation = await page.evaluate(attemptReservation)
             
             if ( possibleReservation ) {
+                console.log("Possibly made a reservation");
                 await navigateToCourtSelection(page, dateBegin);
                 const reservationSuccess = await page.evaluate(isReservationSuccessful)
                 if ( reservationSuccess ) {
@@ -39,7 +46,7 @@ const reserveCourt = async ({ dateBegin, dateEnd, page }) => {
                     console.log("Reservation was clicked but failed after")
                 }
             } else {
-                console.log("attempt reservation failed");
+                console.log("attempt reservation failed, trying again");
             }
 
             selectionIndex++;

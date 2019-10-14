@@ -2,6 +2,7 @@
 
 //this is executing within the context of a page, hence no executes as libraries should have been injected
 const attemptReservation = (dateBegin, dateEnd) => {
+    console.log("attempting reservation")
     const moment = window.moment //from injection
 
     const isNotUndefined = item => item !== undefined && item !== null
@@ -13,16 +14,29 @@ const attemptReservation = (dateBegin, dateEnd) => {
     const desiredTimeAsMinutes = moment(dateBegin).hours() * 60 + moment(dateBegin).minutes()
     const spanMinutesDifference = span => Math.abs(extractSpanMinutes(span) - desiredTimeAsMinutes)
 
-
-    const minDistance = Math.min(...spans.map(spanMinutesDifference))
-    const isMinDistanceAway = span => spanMinutesDifference(span) === minDistance && minDistance < 61; //as in we are not an hour over
-    const chosenSpan = spans.reverse().find(isMinDistanceAway) //reversed because I want to put precedence on the latest of the tied choices
+    const lessThanAnHourDifference = span => spanMinutesDifference(span) < 61;
     
-    if ( !chosenSpan ) return false;
+    const worthySpans = spans.sort( (a, b) => spanMinutesDifference(a) - spanMinutesDifference(b) )
+    
 
-    selectSpanReservation(chosenSpan)
+    if (worthySpans.length == 0) return false;
+
+    selectSpanReservation(worthySpans[0])
+    console.log("Worthy spans", worthySpans);
+    console.log("all spans", spans);
     document.querySelector('#dnn_ctr2372_View_SelectTimeView_btnCreateBooking').click() //this will navigate to a new page but may not succeed
-
+    const helpers = {
+        moment,
+        isNotUndefined,
+        spans,
+        extractSpanMinutes,
+        selectSpanReservation,
+        desiredTimeAsMinutes,
+        spanMinutesDifference,
+        lessThanAnHourDifference,
+        worthySpans
+    }
+    console.log("helpers", helpers)
     return true;
 }
 
