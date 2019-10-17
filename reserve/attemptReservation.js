@@ -2,7 +2,7 @@
 
 //this is executing within the context of a page, hence no executes as libraries should have been injected
 const attemptReservation = (dateBegin, dateEnd) => {
-    console.log("attempting reservation")
+    console.log("attempting reservation, datebegin", dateBegin, dateEnd)
     const moment = window.moment //from injection
 
     const isNotUndefined = item => item !== undefined && item !== null
