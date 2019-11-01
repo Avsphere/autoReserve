@@ -22,8 +22,6 @@ const attemptReservation = (dateBegin, dateEnd) => {
     if (worthySpans.length == 0) return false;
 
     selectSpanReservation(worthySpans[0])
-    console.log("Worthy spans", worthySpans);
-    console.log("all spans", spans);
     document.querySelector('#dnn_ctr2372_View_SelectTimeView_btnCreateBooking').click() //this will navigate to a new page but may not succeed
     const helpers = {
         moment,

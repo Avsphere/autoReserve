@@ -20,3 +20,5 @@ environ.env
 environ.env
 
 tests/*
+
+logs/

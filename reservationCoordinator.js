@@ -9,28 +9,36 @@ const makeReservation = require('./reserve/makeReservation')({ username, passwor
 const RESERVATION_IN_ADVANCE_HOURS = 3*24 //this is the amount of time pro sport lets us reserve early
 
 
+const printDebugTable = ({ currentMoment, reserveDate, canMakeReservationOn, msTillMakeReserveCall }) => {
+    console.log(Array(20).join('-'))
+    console.log(`Current moment: ${currentMoment}`)
+    console.log(`Making reservation for the date ${reserveDate.format()}`)
+    console.log(`Can make reservation on date ${canMakeReservationOn}`)
+    console.log(`Which is in ${msTillMakeReserveCall/60/60} minutes`)
+    console.log(Array(20).join('-'))
+}
+
+
 const reservationRunner = curry( async (currentMoment, reserveDate) => {
-    console.log('Making reservation for date: ', reserveDate.format())
     const canMakeReservationOn = moment(reserveDate).subtract(RESERVATION_IN_ADVANCE_HOURS, 'hours') 
-    console.log('Making reservation ON : ', canMakeReservationOn.format())
 
     const inconspicuousDelay = 0 //So that we are not reserving at the same time -- max wait is ~3 hours
     const msTillMakeReserveCall = canMakeReservationOn.diff(currentMoment) > 0 
 		? canMakeReservationOn.diff(currentMoment) + inconspicuousDelay
 		: inconspicuousDelay //always make sure there is some delay
 
-    console.log('ms till reserve : ', msTillMakeReserveCall, 'which is ', msTillMakeReserveCall / 1000 / 60 / 60, ' hours')
 
+    printDebugTable({ currentMoment, reserveDate, canMakeReservationOn, msTillMakeReserveCall })
     await delay(msTillMakeReserveCall)
-    console.log("attempting to make reservation");
     await makeReservation({ dateBegin : reserveDate })
 })
+
+
+
 
 const dayHourToDate = ({day, hour}) => moment().tz('US/Pacific').startOf('week').day(day).hour(hour).minute(0)
 const addWeeks = n => date => moment(date).add(n, 'week')
 const thisTimeNextWeek = compose( addWeeks(1), dayHourToDate)
-
-
 const getReserveDates = curry( (currentMoment, rawReserveConfig) => rawReserveConfig.map( ({day, hour}) => {
         const currentDay = currentMoment.day()
         const reserveDay = moment().day(day).day()
@@ -46,7 +54,7 @@ const loopReserve = initialReserveDates => async function reservationLoop(weeksT
     const reserveDatesWithOffset = initialReserveDates.map(addWeeks(weeksToAdd))
 
     const currentMoment = moment().tz('US/Pacific') //while this breaks purity it is the app head and feels safer since is used to compute the timeout
-    await Promise.all(reserveDatesWithOffset.map(d => reservationRunner(currentMoment, d)))
+    await Promise.all(reserveDatesWithOffset.map(dateToReserve => reservationRunner(currentMoment, dateToReserve)))
 
     //after the initial reservation is made, we offset from where we started and wait again
     reservationLoop(weeksToAdd+1)
