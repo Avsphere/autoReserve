@@ -12,7 +12,7 @@ const log = require('.././logger')
 const makeReservation = ({ username, password }) => async ({ dateBegin, dateEnd }) => {
     if ( !dateEnd ) { dateEnd = moment(dateBegin).add(1, 'hour') }
     log({ dateBegin : dateBegin.format(), dateEnd : dateEnd.format() })
-    const browser = await puppeteer.launch({headless: true})
+    const browser = await puppeteer.launch({headless: false})
     try {
 	const page = await browser.newPage()
         await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36');

@@ -14,28 +14,27 @@ const attemptReservation = (dateBegin, dateEnd) => {
     const desiredTimeAsMinutes = moment(dateBegin).hours() * 60 + moment(dateBegin).minutes()
     const spanMinutesDifference = span => Math.abs(extractSpanMinutes(span) - desiredTimeAsMinutes)
 
-    const lessThanAnHourDifference = span => spanMinutesDifference(span) < 61;
+    const lessThanAnHourDifference = span => spanMinutesDifference(span) < 91;
     
-    const worthySpans = spans.sort( (a, b) => spanMinutesDifference(a) - spanMinutesDifference(b) )
+    const worthySpans = spans.filter(lessThanAnHourDifference).sort( (a, b) => spanMinutesDifference(a) - spanMinutesDifference(b) )
     
 
     if (worthySpans.length == 0) return false;
 
     selectSpanReservation(worthySpans[0])
-    document.querySelector('#dnn_ctr2372_View_SelectTimeView_btnCreateBooking').click() //this will navigate to a new page but may not succeed
-    const helpers = {
-        moment,
-        isNotUndefined,
-        spans,
-        extractSpanMinutes,
-        selectSpanReservation,
-        desiredTimeAsMinutes,
-        spanMinutesDifference,
-        lessThanAnHourDifference,
-        worthySpans
-    }
-    console.log("helpers", helpers)
-    return true;
+    // const helpers = {
+    //     moment,
+    //     isNotUndefined,
+    //     spans,
+    //     extractSpanMinutes,
+    //     selectSpanReservation,
+    //     desiredTimeAsMinutes,
+    //     spanMinutesDifference,
+    //     lessThanAnHourDifference,
+    //     worthySpans
+    // }
+    // console.log("helpers", helpers)
+    return worthySpans[0].outerHTML;
 }
 
 module.exports = attemptReservation;
